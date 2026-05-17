@@ -59,6 +59,7 @@ cd "${COMFYUI_DIR}"
 exec python main.py \
   --listen "${LISTEN}" \
   --port "${PORT}" \
+  --enable-cors-header "${COMFYUI_CORS_ORIGIN:-*}" \
   --input-directory "${WORKSPACE_DIR}/input" \
   --output-directory "${WORKSPACE_DIR}/output" \
   ${COMFYUI_ARGS:-}

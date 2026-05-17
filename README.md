@@ -101,6 +101,9 @@ Set `RUN_DEP_CHECK=1` in the template. On startup it prints:
 - visible GPU name
 - `pip check` result
 
+The startup command also enables CORS with `COMFYUI_CORS_ORIGIN=*` by default
+so ComfyUI can work behind the RunPod HTTP proxy.
+
 Then open the RunPod HTTP service on port `8188`.
 
 ## Operating model
