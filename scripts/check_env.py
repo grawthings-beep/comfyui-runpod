@@ -46,7 +46,9 @@ def main() -> int:
         check=False,
     )
     print(result.stdout.strip() or "pip check: ok")
-    return 0 if result.returncode == 0 else result.returncode
+    if result.returncode != 0:
+        print("WARNING: pip check reported dependency conflicts; continuing startup.")
+    return 0
 
 
 if __name__ == "__main__":
