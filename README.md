@@ -2,15 +2,14 @@
 
 This project builds a RunPod-friendly ComfyUI Docker image for Community Cloud:
 
-- ComfyUI, Python dependencies, and custom nodes are baked into the image.
+- ComfyUI and PyTorch come from the official RunPod ComfyUI image.
 - Large checkpoints and LoRAs are downloaded at Pod startup from a manifest.
 - Network Volume is optional, so GPU selection is not tied to a single volume region.
-- `/workspace/ComfyUI` is used for runtime models, inputs, and outputs.
+- `/workspace/comfyui` is used for runtime models, inputs, and outputs by default.
 
 ## File map
 
-- `Dockerfile`: custom ComfyUI image.
-- `custom_nodes.txt`: custom nodes to bake into the image.
+- `Dockerfile`: thin wrapper over `runpod/comfyui:latest`.
 - `config/models.example.json`: model manifest template.
 - `scripts/start.sh`: RunPod entrypoint.
 - `scripts/download_models.py`: resumable-ish model downloader with optional sha256 checks.
@@ -40,12 +39,12 @@ docker build --platform linux/amd64 -t docker.io/YOUR_USER/comfyui-runpod:cuda12
 docker push docker.io/YOUR_USER/comfyui-runpod:cuda12.8
 ```
 
-For reproducibility, pin ComfyUI to a known commit:
+To use the Blackwell-compatible official base image:
 
 ```bash
 docker build --platform linux/amd64 \
-  --build-arg COMFYUI_REF=COMFYUI_COMMIT_SHA \
-  -t docker.io/YOUR_USER/comfyui-runpod:COMFYUI_COMMIT_SHA .
+  --build-arg BASE_IMAGE=runpod/comfyui:cuda12.8 \
+  -t docker.io/YOUR_USER/comfyui-runpod:cuda12.8 .
 ```
 
 ## RunPod template settings
@@ -89,7 +88,7 @@ Minimal manifest:
 }
 ```
 
-Relative `path` values are written under `/workspace/ComfyUI`.
+Relative `path` values are written under `/workspace/comfyui`.
 
 ## Dependency check
 
