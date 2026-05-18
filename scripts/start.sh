@@ -35,6 +35,18 @@ MODEL_MANIFEST="${MODEL_MANIFEST:-${CONFIG_DIR}/models.json}"
 PORT="${PORT:-8188}"
 LISTEN="${LISTEN:-0.0.0.0}"
 
+PYTHON_BIN="${PYTHON_BIN:-}"
+if [[ -z "${PYTHON_BIN}" ]]; then
+  if command -v python >/dev/null 2>&1; then
+    PYTHON_BIN="python"
+  elif command -v python3 >/dev/null 2>&1; then
+    PYTHON_BIN="python3"
+  else
+    echo "ERROR: neither python nor python3 was found in PATH." >&2
+    exit 2
+  fi
+fi
+
 mkdir -p "${WORKSPACE_DIR}/input" \
          "${WORKSPACE_DIR}/output" \
          "${MODEL_ROOT}/models/checkpoints" \
@@ -72,7 +84,7 @@ write_extra_model_paths "${COMFYUI_DIR}/extra_model_paths.yml"
 if [[ -n "${MODEL_MANIFEST_JSON:-}" ]]; then
   printf '%s' "${MODEL_MANIFEST_JSON}" > "${MODEL_MANIFEST}"
 elif [[ -n "${MODEL_MANIFEST_URL:-}" ]]; then
-  python - "${MODEL_MANIFEST_URL}" "${MODEL_MANIFEST}" <<'PY'
+  "${PYTHON_BIN}" - "${MODEL_MANIFEST_URL}" "${MODEL_MANIFEST}" <<'PY'
 import pathlib
 import sys
 import urllib.request
@@ -86,7 +98,7 @@ PY
 fi
 
 if [[ -f "${MODEL_MANIFEST}" ]]; then
-  python /opt/runpod-comfy/scripts/download_models.py \
+  "${PYTHON_BIN}" /opt/runpod-comfy/scripts/download_models.py \
     --manifest "${MODEL_MANIFEST}" \
     --root "${MODEL_ROOT}"
 else
@@ -94,11 +106,11 @@ else
 fi
 
 if [[ "${RUN_DEP_CHECK:-0}" == "1" ]]; then
-  python /opt/runpod-comfy/scripts/check_env.py --comfyui-dir "${COMFYUI_DIR}"
+  "${PYTHON_BIN}" /opt/runpod-comfy/scripts/check_env.py --comfyui-dir "${COMFYUI_DIR}"
 fi
 
 cd "${COMFYUI_DIR}"
-exec python main.py \
+exec "${PYTHON_BIN}" main.py \
   --listen "${LISTEN}" \
   --port "${PORT}" \
   --enable-cors-header "${COMFYUI_CORS_ORIGIN:-*}" \
