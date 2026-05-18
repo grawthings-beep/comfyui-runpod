@@ -4,7 +4,8 @@
       "name": "base checkpoint",
       "enabled": true,
       "url": "https://civitai.com/api/download/models/2940478?type=Model&format=SafeTensor&size=pruned&fp=fp16",
-      "path": "models/checkpoints/civitai_2940478_pruned_fp16.safetensors",
+      "path": "models/checkpoints/novaAnimeXL_ilV190.safetensors",
+      "sha256": "FA486CAAFC330F133605D3C18B418D183812F14946631C6544BFB28730DB6D6F",
       "headers": {
         "Authorization": "Bearer ${CIVITAI_TOKEN}"
       }
